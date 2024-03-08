@@ -42,6 +42,44 @@ end
 
 ClientTest.new.test_single_verify
 
+To modify your ClientTest class to allow users to add their API key from the MSL cloud, you can implement a method to set the API key and use it when initializing the EmailVerification::Client. Here's the updated code:
+
+require 'email_verification'
+
+class ClientTest
+def initialize(api_key = nil)
+@api_key = api_key
+@client = EmailVerification::Client.new(api_key: @api_key)
+end
+
+def set_api_key(api_key)
+@api_key = api_key
+@client = EmailVerification::Client.new(api_key: @api_key)
+end
+
+def test_single_verify
+email = 'sahal.abdullah@mslm.io'
+resp = @client.single_verify(email)
+puts resp
+end
+end
+
+# Example usage:
+
+# Instantiate ClientTest with API key
+
+client_test = ClientTest.new('your_api_key_here')
+
+# Alternatively, set API key after instantiation
+
+# client_test.set_api_key('your_api_key_here')
+
+# Perform single email verification
+
+client_test.test_single_verify
+
+With this modification, users can provide their API key either during initialization or after instantiation using the set_api_key method. This gives them the flexibility to use their MSL cloud API key for unlimited hits.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/sahalAbdullah/emailVerification. Please provide detailed descriptions and steps to reproduce any bugs you encounter.
