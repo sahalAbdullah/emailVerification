@@ -4,11 +4,16 @@ require 'json'
 
 module EmailVerification
 
-  class SingleVerifyReqOpts
+   class SingleVerifyReqOpts
     attr_accessor :disable_url_encode
+    attr_accessor :api_key
   end
 
   class Client
+
+    def initialize(api_key = nil)
+      @api_key = api_key
+    end
     def single_verify(email_addr, opts = nil)
       opt = SingleVerifyReqOpts.new
       opt = opts.last unless opts.nil? || opts.empty?
@@ -17,7 +22,14 @@ module EmailVerification
       email_addr = URI.encode_www_form_component(email_addr) unless opt.disable_url_encode
 
       qp = { 'email' => email_addr }
+      if @api_key || opt.api_key
+        api_key = opt.api_key || @api_key
+        qp['apikey'] = api_key
+      end
+
+      
       t_url = prepare_url('https://mslm.io/api/sv/v1', qp, opt)
+      puts "Url #{t_url}"
 
       sv_resp = req_and_resp('GET', t_url, nil, opt)
       return sv_resp
@@ -44,7 +56,7 @@ module EmailVerification
         response = [json_response["email"],json_response["username"],json_response["domain"],json_response["malformed"],json_response["suggestion"],json_response["status"],json_response["has_mailbox"],json_response["accept_all"],json_response["disposable"],json_response["free"],json_response["role"],json_response['mx']]
         return response
       else
-        raise EmailVerification::Error, "HTTP #{response_data.code}: #{response_data.message}"
+        return "HTTP #{response_data.code}: #{response_data.message}"
       end
     end
   end
