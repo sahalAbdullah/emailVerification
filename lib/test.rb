@@ -1,11 +1,11 @@
 require_relative 'emailVerification' 
 
 # Initialize the client with an API key if necessary
-client = EmailVerification::Client.new('bd300b5adb4b4e8f9497ae7b75a59e64')
+client = EmailVerification::Client.new('')
 
 # Create an instance of OtpSendReq with desired parameters
 otp_send_req = {
-    "phone" => "+923004242293",
+    "phone" => "+921122334455",
     "tmpl_sms" => "Your verification code is {112233}",
     "token_len" => 4,
     "expire_seconds" => 300,
@@ -22,7 +22,7 @@ puts "Enter OTP Code : "
 otp = gets.chomp
 
 otp_verify_req = {
-    "phone" => "+923004242293",
+    "phone" => "+921122334444",
     "token" => "#{otp}",
     "consume" => true,
 }
