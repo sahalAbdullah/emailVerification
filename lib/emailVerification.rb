@@ -9,22 +9,6 @@ module EmailVerification
     attr_accessor :api_key
   end
 
-  class OtpSendResp
-    attr_accessor :code
-    attr_accessor :msg
-  end
-
-  class OtpSendReq
-    attr_accessor :phone
-    attr_accessor :tmpl_sms
-    attr_accessor :token_len
-    attr_accessor :expire_seconds
-  end
-
-  class OtpSendReqOpts
-    attr_accessor :req_opts
-  end
-
   class Client
 
     def initialize(api_key = nil)
@@ -54,7 +38,6 @@ module EmailVerification
 
     def send_otp(otp_send_req, opts = nil)
 
-  
       opt = SingleVerifyReqOpts.new
       opt = opts.last unless opts.nil? || opts.empty?
       qp ={}
@@ -69,6 +52,24 @@ module EmailVerification
 
       otp_send_resp = req_and_resp('POST', t_url, otp_send_req, opt)
       return otp_send_resp
+    end
+
+    def verify(otp_token_verify_req, opts = nil)
+      opt = SingleVerifyReqOpts.new
+      opt = opts.last unless opts.nil? || opts.empty?
+      opt.disable_url_encode = true if opt.disable_url_encode.nil?
+
+      qp = {}
+      if @api_key || opt.api_key
+        api_key = opt.api_key || @api_key
+        qp['apikey'] = api_key
+      end
+
+      t_url = prepare_url('https://mslm.io/api/otp/v1/token_verify', qp, opt)
+      puts "Url #{t_url}"
+
+      otp_token_verify_resp = req_and_resp('POST', t_url, otp_token_verify_req, opt)
+      return otp_token_verify_resp
     end
 
     private

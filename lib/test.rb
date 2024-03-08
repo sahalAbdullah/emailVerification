@@ -17,3 +17,22 @@ otp_send_resp = client.send_otp(otp_send_req)
 # Handle response
 puts "Response code: #{otp_send_resp["code"]}"
 puts "Response message: #{otp_send_resp["msg"]}"
+
+puts "Enter OTP Code : "
+otp = gets.chomp
+
+otp_verify_req = {
+    "phone" => "+923004242293",
+    "token" => "#{otp}",
+    "consume" => true,
+}
+
+otp_verify_resp = client.verify(otp_verify_req)
+puts "Response code: #{otp_verify_resp["code"]}"
+puts "Response message: #{otp_verify_resp["msg"]}"
+
+# email = 'sahal.abdullah@mslm.io'
+# resp = client.single_verify(email)
+
+# puts resp 
+
