@@ -80,6 +80,46 @@ client_test.test_single_verify
 
 With this modification, users can provide their API key either during initialization or after instantiation using the set_api_key method. This gives them the flexibility to use their MSL cloud API key for unlimited hits.
 
+Sending and Verifying OTPs
+
+The Single Email Verification gem now supports sending OTPs and verifying them. Here's how you can use this feature:
+
+require 'email_verification'
+
+# Instantiate the client
+
+client = EmailVerification::Client.new
+
+# Sending OTP
+
+otp_send_req = {
+"phone" => "+921123454456",
+"tmpl_sms" => "Your verification code is {112233}",
+"token_len" => 4,
+"expire_seconds" => 300,
+}
+
+otp_send_resp = client.send_otp(otp_send_req)
+
+# Verifying OTP
+
+otp_verify_req = {
+"phone" => "+921123454456",
+"token" => "#{otp}", # Replace `otp` with the actual OTP entered by the user
+"consume" => true,
+}
+
+otp_verify_resp = client.verify(otp_verify_req)
+
+You can change the number of digits in the OTP by modifying the token_len parameter in the otp_send_req hash.
+
+otp_send_req = {
+...
+"token_len" => 6, # Change to the desired length
+...
+}
+Feel free to incorporate these methods into your Ruby applications for email verification and OTP functionalities.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/sahalAbdullah/emailVerification. Please provide detailed descriptions and steps to reproduce any bugs you encounter.
